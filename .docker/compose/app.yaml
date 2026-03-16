@@ -1,0 +1,73 @@
+services:
+    app:
+        build:
+            context: ./../../
+            dockerfile: ./.docker/app/Dockerfile
+            target: production
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: sail-8.5/app
+        #        ports:
+        #            - '${APP_PORT:-80}:80'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            APP_ENV: production
+            APP_DEBUG: 'false'
+            LOG_LEVEL: info
+        volumes:
+            - './../../.env:/var/www/html/.env'
+            - 'app_storage:/var/www/html/storage'
+            - 'app_cache:/var/www/html/bootstrap/cache'
+            - 'nginx_public:/var/www/html/public/nginx'
+        networks:
+            - matrix_network
+        healthcheck:
+            test: [ "CMD-SHELL", "pidof php-fpm || pidof php-fpm8.5 || exit 1" ]
+            retries: 10
+            timeout: 5s
+            interval: 10s
+            start_period: 20s
+        depends_on:
+            - mysql
+            - redis
+
+    horizon:
+        image: sail-8.5/app
+        networks:
+            - matrix_network
+        entrypoint: php artisan horizon
+        restart: unless-stopped
+        depends_on:
+            - app
+
+    scheduler:
+        image: sail-8.5/app
+        networks:
+            - matrix_network
+        entrypoint: php artisan schedule:work
+        restart: unless-stopped
+        depends_on:
+            - app
+
+    reverb:
+        image: sail-8.5/app
+        #        ports:
+        #            - '${FORWARD_REVERB_PORT:-8080}:8080'
+        networks:
+            - matrix_network
+        entrypoint: php artisan reverb:start --host=0.0.0.0 --debug
+        restart: unless-stopped
+        depends_on:
+            - app
+
+networks:
+    matrix_network:
+        driver: bridge
+
+volumes:
+    app_storage:
+        driver: local
+    app_cache:
+        driver: local
+    nginx_public:
+        driver: local

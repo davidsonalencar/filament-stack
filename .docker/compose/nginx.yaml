@@ -1,0 +1,36 @@
+services:
+    nginx:
+        build:
+            context: ./../../
+            dockerfile: ./.docker/nginx/Dockerfile
+            target: production
+            args:
+                APP_HOST: '${APP_HOST:-localhost}'
+        image: sail-8.5/nginx
+        ports:
+            - '${APP_PORT:-80}:80'
+            - '${APP_SSL_PORT:-443}:443'
+        volumes:
+            - 'nginx_public:/var/www/html/public:ro'
+            - 'nginx_conf:/etc/nginx/conf.d'
+            - 'nginx_letsencrypt:/etc/letsencrypt'
+            - './../../.docker/nginx/upstream.conf:/etc/nginx/upstream.conf'
+        environment:
+            - CERTBOT_EMAIL=${CERTBOT_EMAIL:-}
+            - CONTROL_TOKEN=${NGINX_CONTROL_TOKEN:-}
+        networks:
+            - matrix_network
+        restart: unless-stopped
+
+networks:
+    matrix_network:
+        external: true
+        name: matrix_network
+
+volumes:
+    nginx_letsencrypt:
+        driver: local
+    nginx_conf:
+        driver: local
+    nginx_public:
+        driver: local

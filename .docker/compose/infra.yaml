@@ -1,0 +1,56 @@
+services:
+
+    mysql:
+        image: 'mysql:8.4'
+        #        ports:
+        #            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_EXTRA_OPTIONS: '${MYSQL_EXTRA_OPTIONS:-}'
+        volumes:
+            - 'mysql_data:/var/lib/mysql'
+        networks:
+            - matrix_network
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+            retries: 3
+            timeout: 5s
+
+    redis:
+        image: 'redis:alpine'
+        #        ports:
+        #            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'redis_data:/data'
+        networks:
+            - matrix_network
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            retries: 3
+            timeout: 5s
+
+    gotenberg:
+        image: gotenberg/gotenberg:8
+        #        ports:
+        #            - "3000:3000"
+        networks:
+            - matrix_network
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
+            retries: 5
+            timeout: 5s
+
+networks:
+    matrix_network:
+        driver: bridge
+
+volumes:
+    mysql_data:
+        driver: local
+    redis_data:
+        driver: local
