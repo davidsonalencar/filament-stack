@@ -21,8 +21,8 @@ fi
 
 echo "==> Garantindo upstream nginx"
 mkdir -p nginx
-if [ ! -f nginx/upstream.conf ]; then
-  echo "server app:9000;" > nginx/upstream.conf
+if [ ! -f nginx/app_upstream.conf ]; then
+  echo "server app:9000;" > nginx/app_upstream.conf
 fi
 
 echo "==> Validando Docker"
