@@ -1,5 +1,5 @@
 services:
-    app:
+    app_deployment:
         build:
             context: ./../../
             dockerfile: ./.docker/app/Dockerfile
@@ -27,33 +27,6 @@ services:
             timeout: 5s
             interval: 10s
             start_period: 20s
-
-    horizon:
-        image: '${APP_IMAGE:-sail-8.5/app}:${APP_TAG:-latest}'
-        networks:
-            - matrix_network
-        entrypoint: php artisan horizon
-        restart: unless-stopped
-        depends_on:
-            - app
-
-    scheduler:
-        image: '${APP_IMAGE:-sail-8.5/app}:${APP_TAG:-latest}'
-        networks:
-            - matrix_network
-        entrypoint: php artisan schedule:work
-        restart: unless-stopped
-        depends_on:
-            - app
-
-    reverb:
-        image: '${APP_IMAGE:-sail-8.5/app}:${APP_TAG:-latest}'
-        networks:
-            - matrix_network
-        entrypoint: php artisan reverb:start --host=0.0.0.0
-        restart: unless-stopped
-        depends_on:
-            - app
 
 networks:
     matrix_network:
