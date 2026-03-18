@@ -1,0 +1,20 @@
+include:
+    - .docker/compose/infra.yaml
+    - .docker/compose/app.yaml
+    - .docker/compose/nginx.yaml
+
+
+services:
+    app:
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+            gotenberg:
+                condition: service_healthy
+
+    nginx:
+        depends_on:
+            app:
+                condition: service_healthy
