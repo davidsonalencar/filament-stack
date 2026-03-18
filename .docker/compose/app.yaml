@@ -5,7 +5,7 @@ services:
             dockerfile: ./.docker/app/Dockerfile
             target: production
             args:
-                APP_VERSION: '${APP_TAG:-dev}'
+                APP_VERSION: '${APP_VERSION:-dev}'
         image: '${APP_IMAGE:-sail-8.5/app}:${APP_TAG:-latest}'
         environment:
             WWWUSER: '${WWWUSER}'
@@ -13,7 +13,6 @@ services:
             APP_ENV: production
             APP_DEBUG: 'false'
             LOG_LEVEL: info
-            APP_VERSION: '${APP_TAG:-dev}'
         volumes:
             - './../../.env:/var/www/html/.env'
             - 'app_storage:/var/www/html/storage'
