@@ -23,7 +23,8 @@ services:
 
 networks:
     matrix_network:
-        driver: bridge
+        external: true
+        name: matrix_network
 
 volumes:
     app_storage:

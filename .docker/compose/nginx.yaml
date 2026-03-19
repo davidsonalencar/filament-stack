@@ -23,7 +23,6 @@ services:
 
 networks:
     matrix_network:
-        external: true
         name: matrix_network
 
 volumes:
