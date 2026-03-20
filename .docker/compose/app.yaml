@@ -18,6 +18,7 @@ services:
             - 'app_storage:/var/www/html/storage'
             - 'app_cache:/var/www/html/bootstrap/cache'
             - 'nginx_public:/var/www/html/public/nginx'
+        restart: unless-stopped
         networks:
             - matrix_network
         healthcheck:

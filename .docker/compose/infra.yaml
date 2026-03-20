@@ -14,6 +14,7 @@ services:
             MYSQL_EXTRA_OPTIONS: '${MYSQL_EXTRA_OPTIONS:-}'
         volumes:
             - 'mysql_data:/var/lib/mysql'
+        restart: unless-stopped
         networks:
             - matrix_network
         healthcheck:
@@ -27,6 +28,7 @@ services:
         #            - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
             - 'redis_data:/data'
+        restart: unless-stopped
         networks:
             - matrix_network
         healthcheck:
@@ -38,6 +40,7 @@ services:
         image: gotenberg/gotenberg:8
         #        ports:
         #            - "3000:3000"
+        restart: unless-stopped
         networks:
             - matrix_network
         healthcheck:

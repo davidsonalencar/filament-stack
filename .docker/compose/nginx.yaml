@@ -12,7 +12,6 @@ services:
             - 'nginx_public:/var/www/html/public:ro'
             - 'nginx_conf:/etc/nginx/conf.d'
             - 'nginx_letsencrypt:/etc/letsencrypt'
-            - './../../.docker/nginx/app_upstream.conf:/etc/nginx/app_upstream.conf'
         environment:
             - CERTBOT_EMAIL=${CERTBOT_EMAIL:-}
             - CONTROL_TOKEN=${NGINX_CONTROL_TOKEN:-}
