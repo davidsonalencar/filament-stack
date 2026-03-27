@@ -30,6 +30,10 @@ services:
 
     horizon:
         image: '${APP_IMAGE:-sail-8.5/app}:${APP_TAG:-latest}'
+        volumes:
+            - './../../.env:/var/www/html/.env'
+            - 'app_storage:/var/www/html/storage'
+            - 'app_cache:/var/www/html/bootstrap/cache'
         networks:
             - matrix_network
         entrypoint: php artisan horizon
@@ -39,6 +43,10 @@ services:
 
     scheduler:
         image: '${APP_IMAGE:-sail-8.5/app}:${APP_TAG:-latest}'
+        volumes:
+            - './../../.env:/var/www/html/.env'
+            - 'app_storage:/var/www/html/storage'
+            - 'app_cache:/var/www/html/bootstrap/cache'
         networks:
             - matrix_network
         entrypoint: php artisan schedule:work
@@ -48,6 +56,10 @@ services:
 
     reverb:
         image: '${APP_IMAGE:-sail-8.5/app}:${APP_TAG:-latest}'
+        volumes:
+            - './../../.env:/var/www/html/.env'
+            - 'app_storage:/var/www/html/storage'
+            - 'app_cache:/var/www/html/bootstrap/cache'
         networks:
             - matrix_network
         entrypoint: php artisan reverb:start --host=0.0.0.0
