@@ -18,13 +18,3 @@ services:
         depends_on:
             app:
                 condition: service_healthy
-
-    mailpit:
-        image: 'axllent/mailpit:latest'
-        ports:
-            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-        environment:
-            MP_WEBROOT: webmail
-        networks:
-            - matrix_network
